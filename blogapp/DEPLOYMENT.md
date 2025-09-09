@@ -16,11 +16,12 @@
 ### Step 2: Configure Service
 
 1. **Name**: `blogapp-backend`
-2. **Environment**: `Java`
+2. **Environment**: `Docker`
 3. **Root Directory**: `blogapp` (important: point to the backend folder)
-4. **Build Command**: `chmod +x ./mvnw && ./mvnw clean package -DskipTests`
-5. **Start Command**: `java -jar target/blogapp-0.0.1-SNAPSHOT.jar`
-6. **Plan**: Free (or choose paid for better performance)
+4. **Dockerfile Path**: `./Dockerfile` (should be auto-detected)
+5. **Plan**: Free (or choose paid for better performance)
+
+**Note**: Render will automatically build using the Dockerfile. No need to specify build/start commands.
 
 ### Step 3: Environment Variables
 
