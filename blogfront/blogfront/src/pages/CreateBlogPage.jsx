@@ -3,15 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { blogAPI } from '../services/api';
 import { useToast } from '../contexts/ToastContext';
 import LoadingSpinner from '../components/LoadingSpinner';
-import TagInput from '../components/TagInput';
+// TagInput removed
 
 const CreateBlogPage = () => {
   const navigate = useNavigate();
   const { showSuccess, showError } = useToast();
   const [formData, setFormData] = useState({
     title: '',
-    content: '',
-    tags: []
+    content: ''
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -32,12 +31,7 @@ const CreateBlogPage = () => {
     }
   };
 
-  const handleTagsChange = (tags) => {
-    setFormData(prev => ({
-      ...prev,
-      tags
-    }));
-  };
+  // Tag handling removed
 
   const validateForm = () => {
     const newErrors = {};
@@ -69,8 +63,7 @@ const CreateBlogPage = () => {
       setLoading(true);
       const response = await blogAPI.createBlog({
         title: formData.title.trim(),
-        content: formData.content.trim(),
-        tags: formData.tags
+        content: formData.content.trim()
       });
 
       showSuccess('Blog post created successfully!');
@@ -117,20 +110,7 @@ const CreateBlogPage = () => {
             )}
           </div>
 
-          {/* Tags field */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tags
-            </label>
-            <TagInput
-              tags={formData.tags}
-              onChange={handleTagsChange}
-              placeholder="Add tags to help categorize your post..."
-            />
-            <p className="mt-1 text-sm text-gray-500">
-              Add relevant tags to help readers find your post
-            </p>
-          </div>
+          {/* Tags functionality removed */}
 
           {/* Content field */}
           <div>

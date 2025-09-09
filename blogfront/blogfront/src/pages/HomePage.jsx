@@ -16,7 +16,7 @@ const HomePage = () => {
   const [totalElements, setTotalElements] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('date');
-  const [selectedTags, setSelectedTags] = useState([]);
+  // Tags removed
   const [isSearching, setIsSearching] = useState(false);
 
   const fetchBlogs = async (page = 0, isSearch = false) => {
@@ -28,8 +28,7 @@ const HomePage = () => {
       }
       setError(null);
       
-      const tagsParam = selectedTags.length > 0 ? selectedTags.join(',') : '';
-      const response = await blogAPI.getBlogs(page, 10, sortBy, searchTerm, tagsParam);
+      const response = await blogAPI.getBlogs(page, 10, sortBy, searchTerm);
       
       setBlogs(response.content || []);
       setTotalPages(response.totalPages || 0);
@@ -57,10 +56,10 @@ const HomePage = () => {
     }
   }, [searchTerm]);
 
-  // Immediate effect for sort and tags
+  // Immediate effect for sort
   useEffect(() => {
     fetchBlogs(0);
-  }, [sortBy, selectedTags]);
+  }, [sortBy]);
 
 
 
@@ -195,19 +194,7 @@ const HomePage = () => {
                   {blog.contentPreview || truncateContent(blog.content)}
                 </p>
                 
-                {/* Tags */}
-                {blog.tags && blog.tags.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {blog.tags.map((tag, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+                {/* Tags removed */}
                 
                 <div className="mt-4 flex justify-between items-center">
                   <Link

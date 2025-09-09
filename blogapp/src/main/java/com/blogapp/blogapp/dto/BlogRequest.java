@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,5 +19,5 @@ public class BlogRequest {
     @Size(min = 10, message = "Content must be at least 10 characters")
     private String content;
     
-    private List<String> tags;
+    // Tags functionality removed
 }

@@ -67,18 +67,18 @@ const Toast = ({
   const { bgColor, textColor, icon } = getToastStyles();
 
   return (
-    <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-2 duration-300">
-      <div className={`max-w-sm w-full ${bgColor} border rounded-lg shadow-lg p-4`}>
+    <div className="toast-enter">
+      <div className={`w-full ${bgColor} border rounded-lg shadow-lg p-4`}>
         <div className="flex items-start">
           <div className="flex-shrink-0">
             {icon}
           </div>
-          <div className="ml-3 w-0 flex-1">
-            <p className={`text-sm font-medium ${textColor}`}>
+          <div className="ml-3 flex-1 min-w-0">
+            <p className={`text-sm font-medium ${textColor} break-words`}>
               {message}
             </p>
           </div>
-          <div className="ml-4 flex-shrink-0 flex">
+          <div className="ml-4 flex-shrink-0">
             <button
               onClick={onClose}
               className={`inline-flex ${textColor} hover:opacity-75 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-gray-600 rounded-md`}

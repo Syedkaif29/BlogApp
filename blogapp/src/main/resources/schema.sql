@@ -26,22 +26,7 @@ CREATE TABLE IF NOT EXISTS blogs (
     CONSTRAINT fk_blog_author FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Create tags table
-CREATE TABLE IF NOT EXISTS tags (
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(50) UNIQUE NOT NULL,
-    color VARCHAR(7),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Create blog_tags junction table
-CREATE TABLE IF NOT EXISTS blog_tags (
-    blog_id BIGINT NOT NULL,
-    tag_id BIGINT NOT NULL,
-    PRIMARY KEY (blog_id, tag_id),
-    CONSTRAINT fk_blog_tags_blog FOREIGN KEY (blog_id) REFERENCES blogs(id) ON DELETE CASCADE,
-    CONSTRAINT fk_blog_tags_tag FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
-);
+-- Tags functionality removed
 
 -- Create comments table
 CREATE TABLE IF NOT EXISTS comments (
@@ -74,7 +59,7 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_blogs_author_id ON blogs(author_id);
 CREATE INDEX IF NOT EXISTS idx_blogs_created_at ON blogs(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_blogs_view_count ON blogs(view_count DESC);
-CREATE INDEX IF NOT EXISTS idx_tags_name ON tags(name);
+-- Tag index removed
 CREATE INDEX IF NOT EXISTS idx_comments_blog_id ON comments(blog_id);
 CREATE INDEX IF NOT EXISTS idx_comments_author_id ON comments(author_id);
 CREATE INDEX IF NOT EXISTS idx_comments_created_at ON comments(created_at DESC);

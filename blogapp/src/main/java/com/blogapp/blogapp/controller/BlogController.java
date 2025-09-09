@@ -1,23 +1,33 @@
 package com.blogapp.blogapp.controller;
 
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.blogapp.blogapp.dto.BlogRequest;
 import com.blogapp.blogapp.dto.BlogResponse;
 import com.blogapp.blogapp.dto.BlogSummaryResponse;
 import com.blogapp.blogapp.entity.Blog;
 import com.blogapp.blogapp.service.BlogService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/blogs")
@@ -28,39 +38,22 @@ public class BlogController {
     private final BlogService blogService;
     
     /**
-     * Get all blogs with pagination, sorting, and filtering (public endpoint)
-     * GET /api/blogs?page=0&size=10&sortBy=date&search=spring&tags=java,spring
+     * Get all blogs with pagination, sorting, and searching (public endpoint)
+     * GET /api/blogs?page=0&size=10&sortBy=date&search=spring
      */
     @GetMapping
     public ResponseEntity<Page<BlogSummaryResponse>> getAllBlogs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "date") String sortBy,
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) String tags) {
+            @RequestParam(required = false) String search) {
         
         Pageable pageable = PageRequest.of(page, size);
         Page<Blog> blogs;
         
-        // Parse tags if provided
-        java.util.List<String> tagList = null;
-        if (tags != null && !tags.trim().isEmpty()) {
-            tagList = java.util.Arrays.asList(tags.split(","))
-                    .stream()
-                    .map(String::trim)
-                    .filter(tag -> !tag.isEmpty())
-                    .collect(java.util.stream.Collectors.toList());
-        }
-        
-        // Apply filtering and searching
+        // Apply searching
         if (search != null && !search.trim().isEmpty()) {
-            if (tagList != null && !tagList.isEmpty()) {
-                blogs = blogService.searchBlogsWithTags(search, tagList, pageable);
-            } else {
-                blogs = blogService.searchBlogs(search, pageable);
-            }
-        } else if (tagList != null && !tagList.isEmpty()) {
-            blogs = blogService.getBlogsByTags(tagList, pageable);
+            blogs = blogService.searchBlogs(search, pageable);
         } else {
             blogs = blogService.getAllBlogs(pageable, sortBy);
         }
@@ -100,7 +93,6 @@ public class BlogController {
         Blog createdBlog = blogService.createBlog(
             request.getTitle(), 
             request.getContent(), 
-            request.getTags(),
             userEmail
         );
         
@@ -125,7 +117,6 @@ public class BlogController {
                 id, 
                 request.getTitle(), 
                 request.getContent(), 
-                request.getTags(),
                 userEmail
             );
             
@@ -222,16 +213,11 @@ public class BlogController {
             blog.getAuthor().getLastName()
         );
         
-        // Convert Tag entities to tag names - create a defensive copy to avoid ConcurrentModificationException
-        java.util.List<String> tagNames = new java.util.ArrayList<>(blog.getTags()).stream()
-                .map(tag -> tag.getName())
-                .collect(java.util.stream.Collectors.toList());
-        
         return new BlogResponse(
             blog.getId(),
             blog.getTitle(),
             blog.getContent(),
-            tagNames,
+            java.util.Collections.emptyList(), // No tags
             blog.getViewCount(),
             authorInfo,
             blog.getCreatedAt(),
@@ -252,16 +238,11 @@ public class BlogController {
             ? blog.getContent().substring(0, 200) + "..."
             : blog.getContent();
         
-        // Convert Tag entities to tag names - create a defensive copy to avoid ConcurrentModificationException
-        java.util.List<String> tagNames = new java.util.ArrayList<>(blog.getTags()).stream()
-                .map(tag -> tag.getName())
-                .collect(java.util.stream.Collectors.toList());
-        
         return new BlogSummaryResponse(
             blog.getId(),
             blog.getTitle(),
             contentPreview,
-            tagNames,
+            java.util.Collections.emptyList(), // No tags
             blog.getViewCount(),
             authorInfo,
             blog.getCreatedAt(),

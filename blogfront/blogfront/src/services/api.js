@@ -64,7 +64,7 @@ export const authAPI = {
 
 // Blog API functions
 export const blogAPI = {
-  getBlogs: async (page = 0, size = 10, sortBy = 'date', search = '', tags = '') => {
+  getBlogs: async (page = 0, size = 10, sortBy = 'date', search = '') => {
     try {
       const params = new URLSearchParams({
         page: page.toString(),
@@ -73,7 +73,6 @@ export const blogAPI = {
       });
       
       if (search) params.append('search', search);
-      if (tags) params.append('tags', tags);
       
       const response = await api.get(`/blogs?${params.toString()}`);
       return response.data;
@@ -115,41 +114,7 @@ export const blogAPI = {
   }
 };
 
-// Tag API functions
-export const tagAPI = {
-  getAllTags: async () => {
-    try {
-      const response = await api.get('/tags');
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || { message: 'Failed to fetch tags' };
-    }
-  },
-  getPopularTags: async () => {
-    try {
-      const response = await api.get('/tags/popular');
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || { message: 'Failed to fetch popular tags' };
-    }
-  },
-  searchTags: async (name) => {
-    try {
-      const response = await api.get(`/tags/search?name=${encodeURIComponent(name)}`);
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || { message: 'Failed to search tags' };
-    }
-  },
-  createTag: async (tagData) => {
-    try {
-      const response = await api.post('/tags', tagData);
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || { message: 'Failed to create tag' };
-    }
-  }
-};
+// Tag API functions removed
 
 // Comment API functions
 export const commentAPI = {
