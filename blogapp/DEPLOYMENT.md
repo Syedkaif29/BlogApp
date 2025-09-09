@@ -17,9 +17,10 @@
 
 1. **Name**: `blogapp-backend`
 2. **Environment**: `Java`
-3. **Build Command**: `chmod +x ./mvnw && ./mvnw clean package -DskipTests`
-4. **Start Command**: `java -jar target/blogapp-0.0.1-SNAPSHOT.jar`
-5. **Plan**: Free (or choose paid for better performance)
+3. **Root Directory**: `blogapp` (important: point to the backend folder)
+4. **Build Command**: `chmod +x ./mvnw && ./mvnw clean package -DskipTests`
+5. **Start Command**: `java -jar target/blogapp-0.0.1-SNAPSHOT.jar`
+6. **Plan**: Free (or choose paid for better performance)
 
 ### Step 3: Environment Variables
 
