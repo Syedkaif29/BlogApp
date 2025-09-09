@@ -8,34 +8,31 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Entity
-@Table(name = "blogs")
+@Table(name = "comments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Blog {
+public class Comment {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
-    private String title;
-    
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
     
-    @Column(name = "view_count", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
-    private Long viewCount = 0L;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "blog_id", nullable = false)
+    private Blog blog;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
+    
+    @Column(name = "is_edited", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isEdited = false;
     
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -44,18 +41,4 @@ public class Blog {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-    
-    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BlogImage> images = new ArrayList<>();
-    
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "blog_tags",
-        joinColumns = @JoinColumn(name = "blog_id"),
-        inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags = new HashSet<>();
 }

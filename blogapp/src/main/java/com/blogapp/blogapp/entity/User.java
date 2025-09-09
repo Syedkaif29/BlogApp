@@ -33,6 +33,12 @@ public class User {
     @Column(nullable = false)
     private String lastName;
     
+    @Column(name = "profile_picture")
+    private String profilePicture;
+    
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+    
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -43,4 +49,7 @@ public class User {
     
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Blog> blogs;
+    
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments;
 }

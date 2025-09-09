@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,6 +15,8 @@ public class BlogSummaryResponse {
     private Long id;
     private String title;
     private String contentPreview; // First 200 characters of content
+    private List<String> tags;
+    private Long viewCount;
     private AuthorInfo author;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

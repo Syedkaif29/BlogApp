@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,16 +28,42 @@ public class BlogController {
     private final BlogService blogService;
     
     /**
-     * Get all blogs with pagination (public endpoint)
-     * GET /api/blogs?page=0&size=10
+     * Get all blogs with pagination, sorting, and filtering (public endpoint)
+     * GET /api/blogs?page=0&size=10&sortBy=date&search=spring&tags=java,spring
      */
     @GetMapping
     public ResponseEntity<Page<BlogSummaryResponse>> getAllBlogs(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "date") String sortBy,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String tags) {
         
         Pageable pageable = PageRequest.of(page, size);
-        Page<Blog> blogs = blogService.getAllBlogs(pageable);
+        Page<Blog> blogs;
+        
+        // Parse tags if provided
+        java.util.List<String> tagList = null;
+        if (tags != null && !tags.trim().isEmpty()) {
+            tagList = java.util.Arrays.asList(tags.split(","))
+                    .stream()
+                    .map(String::trim)
+                    .filter(tag -> !tag.isEmpty())
+                    .collect(java.util.stream.Collectors.toList());
+        }
+        
+        // Apply filtering and searching
+        if (search != null && !search.trim().isEmpty()) {
+            if (tagList != null && !tagList.isEmpty()) {
+                blogs = blogService.searchBlogsWithTags(search, tagList, pageable);
+            } else {
+                blogs = blogService.searchBlogs(search, pageable);
+            }
+        } else if (tagList != null && !tagList.isEmpty()) {
+            blogs = blogService.getBlogsByTags(tagList, pageable);
+        } else {
+            blogs = blogService.getAllBlogs(pageable, sortBy);
+        }
         
         Page<BlogSummaryResponse> response = blogs.map(this::convertToBlogSummaryResponse);
         
@@ -49,7 +76,7 @@ public class BlogController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<BlogResponse> getBlogById(@PathVariable Long id) {
-        Optional<Blog> blog = blogService.getBlogById(id);
+        Optional<Blog> blog = blogService.getBlogByIdAndIncrementViews(id);
         
         if (blog.isPresent()) {
             BlogResponse response = convertToBlogResponse(blog.get());
@@ -70,7 +97,12 @@ public class BlogController {
             Authentication authentication) {
         
         String userEmail = authentication.getName();
-        Blog createdBlog = blogService.createBlog(request.getTitle(), request.getContent(), userEmail);
+        Blog createdBlog = blogService.createBlog(
+            request.getTitle(), 
+            request.getContent(), 
+            request.getTags(),
+            userEmail
+        );
         
         BlogResponse response = convertToBlogResponse(createdBlog);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -89,7 +121,13 @@ public class BlogController {
         
         try {
             String userEmail = authentication.getName();
-            Blog updatedBlog = blogService.updateBlog(id, request.getTitle(), request.getContent(), userEmail);
+            Blog updatedBlog = blogService.updateBlog(
+                id, 
+                request.getTitle(), 
+                request.getContent(), 
+                request.getTags(),
+                userEmail
+            );
             
             BlogResponse response = convertToBlogResponse(updatedBlog);
             return ResponseEntity.ok(response);
@@ -184,10 +222,17 @@ public class BlogController {
             blog.getAuthor().getLastName()
         );
         
+        // Convert Tag entities to tag names - create a defensive copy to avoid ConcurrentModificationException
+        java.util.List<String> tagNames = new java.util.ArrayList<>(blog.getTags()).stream()
+                .map(tag -> tag.getName())
+                .collect(java.util.stream.Collectors.toList());
+        
         return new BlogResponse(
             blog.getId(),
             blog.getTitle(),
             blog.getContent(),
+            tagNames,
+            blog.getViewCount(),
             authorInfo,
             blog.getCreatedAt(),
             blog.getUpdatedAt()
@@ -207,10 +252,17 @@ public class BlogController {
             ? blog.getContent().substring(0, 200) + "..."
             : blog.getContent();
         
+        // Convert Tag entities to tag names - create a defensive copy to avoid ConcurrentModificationException
+        java.util.List<String> tagNames = new java.util.ArrayList<>(blog.getTags()).stream()
+                .map(tag -> tag.getName())
+                .collect(java.util.stream.Collectors.toList());
+        
         return new BlogSummaryResponse(
             blog.getId(),
             blog.getTitle(),
             contentPreview,
+            tagNames,
+            blog.getViewCount(),
             authorInfo,
             blog.getCreatedAt(),
             blog.getUpdatedAt()

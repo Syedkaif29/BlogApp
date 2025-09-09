@@ -58,15 +58,25 @@
     - Create DTOs for blog requests and responses
     - _Requirements: 2.1, 2.3, 3.2, 3.3, 3.4, 5.3_
 
-- [ ] 4. Set up frontend project structure and routing
+- [x] 4. Set up frontend project structure and routing
+
+
+
+
+
   - Install required dependencies (React Router, Axios)
   - Create folder structure for components, pages, services, and contexts
   - Set up React Router with public and protected routes
   - Create basic layout component with navigation
   - _Requirements: 4.3_
 
-- [ ] 5. Implement frontend authentication system
-  - [ ] 5.1 Create authentication context and API service
+- [-] 5. Implement frontend authentication system
+
+
+
+  - [x] 5.1 Create authentication context and API service
+
+
     - Build AuthContext for global authentication state management
     - Create API service functions for login and registration
     - Implement token storage and retrieval from localStorage
@@ -74,21 +84,41 @@
     - _Requirements: 1.5, 1.7_
 
   - [ ] 5.2 Build authentication pages and components
+
+
+
+
+
+
     - Create LoginPage component with form validation
     - Create RegisterPage component with form validation
     - Implement PrivateRoute component for protected routes
     - Add loading states and error handling for auth operations
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.6, 4.4_
 
-- [ ] 6. Implement frontend blog management features
+- [x] 6. Implement frontend blog management features
+
+
+
+
+
+
+
+
   - [ ] 6.1 Create blog listing and detail pages
     - Build BlogListPage with pagination component
     - Create BlogDetailPage for individual blog posts
     - Implement API service functions for fetching blogs
+
+
     - Add responsive design with Tailwind CSS classes
     - _Requirements: 3.1, 3.2, 3.4, 3.5, 4.1, 4.2_
 
   - [ ] 6.2 Build blog creation and editing functionality
+
+
+
+
     - Create CreateBlogPage with rich text form
     - Build EditBlogPage with pre-populated form data
     - Implement API service functions for blog CRUD operations
@@ -154,9 +184,115 @@
     - Add debouncing for search and form inputs
     - _Requirements: 4.3, 4.4_
 
-- [ ] 12. Prepare application for deployment
+- [ ] 12. Implement image attachment system
+  - [ ] 12.1 Create backend image handling
+    - Create BlogImage entity and repository
+    - Implement ImageService for file upload and management
+    - Create ImageController with upload and serve endpoints
+    - Add file validation and storage configuration
+    - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6_
+
+  - [ ] 12.2 Build frontend image upload functionality
+    - Create image upload component with drag-and-drop
+    - Add image preview and management in blog editor
+    - Implement responsive image display in blog posts
+    - Add image deletion and replacement features
+    - _Requirements: 5.1, 5.3, 5.6_
+
+- [ ] 13. Implement blog tagging system
+  - [ ] 13.1 Create backend tag management
+    - Create Tag entity and repository with many-to-many relationship
+    - Implement TagService for tag operations and popularity tracking
+    - Create TagController for tag CRUD operations
+    - Add tag validation and duplicate prevention
+    - _Requirements: 6.1, 6.2, 6.5, 6.6_
+
+  - [ ] 13.2 Build frontend tag functionality
+    - Create tag input component with autocomplete
+    - Add tag display and filtering in blog listing
+    - Implement popular tags sidebar or section
+    - Create tag-based navigation and filtering
+    - _Requirements: 6.1, 6.3, 6.4, 6.5_
+
+- [ ] 14. Implement sorting and filtering system
+  - [ ] 14.1 Enhance backend blog queries
+    - Add sorting parameters to BlogRepository queries
+    - Implement filtering by tags, date ranges, and popularity
+    - Create search functionality for blog titles and content
+    - Add pagination support for filtered results
+    - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
+
+  - [ ] 14.2 Build frontend sorting and filtering UI
+    - Create sorting dropdown with date, popularity, and alphabetical options
+    - Add tag filter checkboxes or multi-select component
+    - Implement search bar with debounced input
+    - Add filter persistence across pagination
+    - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6_
+
+- [ ] 15. Implement comments system
+  - [ ] 15.1 Create backend comment management
+    - Create Comment entity and repository
+    - Implement CommentService with CRUD operations and authorization
+    - Create CommentController with pagination support
+    - Add comment validation and edit tracking
+    - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.8_
+
+  - [ ] 15.2 Build frontend comment functionality
+    - Create comment display component with timestamps
+    - Add comment form for authenticated users
+    - Implement edit and delete functionality for own comments
+    - Add comment pagination and loading states
+    - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8_
+
+- [ ] 16. Implement user profile management
+  - [ ] 16.1 Enhance backend user management
+    - Update User entity with profile fields (bio, profile picture)
+    - Implement UserService profile update functionality
+    - Create UserController for profile operations
+    - Add user activity tracking and retrieval
+    - _Requirements: 9.1, 9.2, 9.5, 9.6_
+
+  - [ ] 16.2 Build frontend profile functionality
+    - Create user profile page with editable fields
+    - Add profile picture upload and management
+    - Implement user activity display (posts and comments)
+    - Create profile navigation and settings
+    - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7_
+
+- [ ] 17. Write comprehensive tests for new features
+  - [ ] 17.1 Create backend tests for new functionality
+    - Write tests for image upload and management
+    - Create tests for tag operations and relationships
+    - Add tests for comment CRUD operations
+    - Test sorting, filtering, and search functionality
+    - _Requirements: 5.1, 6.1, 7.1, 8.1_
+
+  - [ ] 17.2 Write frontend tests for new components
+    - Create tests for image upload components
+    - Write tests for tag input and filtering
+    - Add tests for comment functionality
+    - Test profile management components
+    - _Requirements: 5.1, 6.1, 7.1, 8.1, 9.1_
+
+- [ ] 18. Optimize performance for enhanced features
+  - [ ] 18.1 Implement backend optimizations
+    - Add database indexing for tags, comments, and view counts
+    - Implement caching for popular tags and frequent queries
+    - Add image optimization and compression
+    - Configure file storage and CDN integration
+    - _Requirements: 10.1, 10.2, 10.7, 10.8, 10.9_
+
+  - [ ] 18.2 Add frontend performance optimizations
+    - Implement lazy loading for images and comments
+    - Add virtual scrolling for large comment lists
+    - Optimize tag filtering and search performance
+    - Add progressive image loading and placeholders
+    - _Requirements: 5.6, 7.5, 8.8_
+
+- [ ] 19. Prepare application for deployment
   - Create production build configurations for both frontend and backend
   - Set up environment variable management for different environments
   - Create Docker configurations if containerization is needed
   - Add health check endpoints for monitoring
-  - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6_
+  - Configure file storage for production environment
+  - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6_

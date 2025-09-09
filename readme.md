@@ -1,41 +1,206 @@
 
-FULL STACK INTERN ASSESSMENT 
+# Blog Application - Full Stack Assessment
 
-Assignment: Build a Blog Application
+A full-stack blog application built with React and Spring Boot, featuring user authentication, blog management, and responsive design.
 
-Requirements:
--	The application should allow users to create, view, and manage blog posts with the following features:
--	User authentication using email and password.
--	Only logged-in users can create blogs.
--	Each blog should have a title and content.
--	Once published, blogs should be viewable by everyone (even unauthenticated users).
--	There should be a public page that lists all blogs with pagination.
--	Blogs should be stored in a SQL or NoSQL database.
--	The application should be responsive and work on both desktop and mobile devices.
--	The application should be built using a front-end framework such as React, Angular, or Vue and a back-end framework such as Laravel, Django, or Spring boot.
--	The application should be hosted on a cloud-based platform such as AWS, Google Cloud, or Azure.
+## 🚀 Features
 
-Instructions:
--	Choose a front-end framework and a back-end framework to use for the project.
--	Build the user interface of the application using the front-end framework. The following pages are required:
--	Signup / Login page
--	Blog creation page (accessible only to logged-in users)
--	Blog listing page (public, with pagination)
--	Blog detail page (public, shows full content)
--	Blog edit/delete options (only for blog authors)
--	Build the backend API of the application using the back-end framework. Include endpoints for user authentication and blog CRUD operations.
--	Connect the front-end and back-end of the application using HTTP requests.
--	Test the application thoroughly to ensure that it works as expected.
--	Deploy the application to a cloud-based platform.
+- **User Authentication**: Secure JWT-based login and registration
+- **Blog Management**: Create, read, update, and delete blog posts
+- **Public Access**: Anyone can view blogs, only authenticated users can create/edit
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Pagination**: Efficient blog listing with pagination support
+- **Author Controls**: Blog authors can edit and delete their own posts
 
-Submission:
--	Submit the source code for the application on a version control system such as Git.
--	Include a README.md file with instructions on how to run the application.
--	Deploy the application to a cloud-based platform and provide the URL.
--	Create a short video recording on Loom, walking us through the assignment. 
+## 🛠 Technology Stack
 
-Note: This assignment is designed to test your skills in building a full-stack web application with authentication, data persistence, and RESTful APIs. We are looking for clean and efficient code, attention to detail, and the ability to work with both front-end and back-end technologies. Good luck!
+### Frontend
+- **React 18** - Modern UI framework
+- **React Router** - Client-side routing
+- **Tailwind CSS** - Utility-first CSS framework
+- **Axios** - HTTP client for API requests
 
-Timeline - 2 working days 
-Submission - On email 
+### Backend
+- **Spring Boot 3.5.5** - Java web framework
+- **Spring Security** - Authentication and authorization
+- **Spring Data JPA** - Database abstraction layer
+- **PostgreSQL** - Relational database
+- **JWT** - Stateless authentication tokens
+
+## 📋 Prerequisites
+
+- **Java 21** or higher
+- **Node.js 18** or higher
+- **PostgreSQL 12** or higher
+- **Maven 3.6** or higher
+
+## 🏃‍♂️ Quick Start
+
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd BlogApp
+```
+
+### 2. Database Setup
+```sql
+-- Create database
+CREATE DATABASE blogapp;
+
+-- Create user (optional)
+CREATE USER blogapp_user WITH PASSWORD 'your_password';
+GRANT ALL PRIVILEGES ON DATABASE blogapp TO blogapp_user;
+```
+
+### 3. Backend Setup
+```bash
+cd blogapp
+
+# Update application.properties with your database credentials
+# src/main/resources/application.properties
+
+# Run the Spring Boot application
+mvn spring-boot:run
+```
+
+The backend will start on `http://localhost:8082`
+
+### 4. Frontend Setup
+```bash
+cd blogfront/blogfront
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+The frontend will start on `http://localhost:5173`
+
+## 📁 Project Structure
+
+```
+BlogApp/
+├── blogapp/                 # Spring Boot backend
+│   ├── src/main/java/
+│   │   └── com/blogapp/blogapp/
+│   │       ├── controller/  # REST controllers
+│   │       ├── service/     # Business logic
+│   │       ├── entity/      # JPA entities
+│   │       ├── dto/         # Data transfer objects
+│   │       ├── config/      # Configuration classes
+│   │       └── security/    # Security components
+│   └── src/main/resources/
+│       ├── application.properties
+│       └── schema.sql
+├── blogfront/blogfront/     # React frontend
+│   ├── src/
+│   │   ├── components/      # Reusable components
+│   │   ├── pages/          # Page components
+│   │   ├── contexts/       # React contexts
+│   │   └── services/       # API services
+│   └── public/
+└── README.md
+```
+
+## 🔗 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `POST /api/auth/logout` - User logout
+
+### Blogs
+- `GET /api/blogs` - Get all blogs (public, paginated)
+- `GET /api/blogs/{id}` - Get blog by ID (public)
+- `POST /api/blogs` - Create new blog (authenticated)
+- `PUT /api/blogs/{id}` - Update blog (author only)
+- `DELETE /api/blogs/{id}` - Delete blog (author only)
+
+## 🎨 Pages
+
+1. **Home Page** (`/`) - Public blog listing with pagination
+2. **Login Page** (`/login`) - User authentication
+3. **Register Page** (`/register`) - User registration
+4. **Create Blog** (`/create`) - Blog creation (protected)
+5. **Blog Detail** (`/blog/:id`) - Individual blog view (public)
+6. **Edit Blog** (`/edit/:id`) - Blog editing (author only)
+
+## 🔐 Security Features
+
+- JWT-based stateless authentication
+- Password encryption using BCrypt
+- Route protection for authenticated users
+- Author-only access for blog editing/deletion
+- CORS configuration for cross-origin requests
+
+## 📱 Responsive Design
+
+The application is fully responsive and optimized for:
+- Desktop (1024px+)
+- Tablet (768px - 1023px)
+- Mobile (320px - 767px)
+
+## 🚀 Deployment
+
+### Backend Deployment
+```bash
+# Build the JAR file
+mvn clean package
+
+# Run the JAR
+java -jar target/blogapp-0.0.1-SNAPSHOT.jar
+```
+
+### Frontend Deployment
+```bash
+# Build for production
+npm run build
+
+# The dist/ folder contains the production build
+```
+
+## 🧪 Testing
+
+### Backend Tests
+```bash
+cd blogapp
+mvn test
+```
+
+### Frontend Tests
+```bash
+cd blogfront/blogfront
+npm test
+```
+
+## 🌐 Live Demo
+
+**Frontend URL**: [To be deployed]
+**Backend API**: [To be deployed]
+
+## 👥 Usage
+
+1. **Register** a new account or **login** with existing credentials
+2. **Browse blogs** on the home page (no authentication required)
+3. **Create new blogs** after logging in
+4. **Edit or delete** your own blog posts
+5. **View detailed** blog posts by clicking on titles
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+<!-- **Assignment Submission**: Full Stack Intern Assessment - Blog Application  -->
 

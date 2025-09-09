@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Project documentation files
+design.md
+requirements.md
+tasks.md

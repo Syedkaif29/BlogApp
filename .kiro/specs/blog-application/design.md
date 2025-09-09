@@ -108,20 +108,44 @@ sequenceDiagram
   - `POST /api/auth/login`
   - `POST /api/auth/logout`
 - **BlogController**: Manages blog operations
-  - `GET /api/blogs` (public, paginated)
-  - `GET /api/blogs/{id}` (public)
+  - `GET /api/blogs` (public, paginated, with sorting/filtering)
+  - `GET /api/blogs/{id}` (public, increments view count)
   - `POST /api/blogs` (authenticated)
   - `PUT /api/blogs/{id}` (author only)
   - `DELETE /api/blogs/{id}` (author only)
+- **CommentController**: Manages comment operations
+  - `GET /api/blogs/{blogId}/comments` (public, paginated)
+  - `POST /api/blogs/{blogId}/comments` (authenticated)
+  - `PUT /api/comments/{id}` (author only)
+  - `DELETE /api/comments/{id}` (author only)
+- **TagController**: Manages tag operations
+  - `GET /api/tags` (public, returns all tags)
+  - `GET /api/tags/popular` (public, returns popular tags)
+  - `POST /api/tags` (authenticated, create new tag)
+- **UserController**: Manages user profile operations
+  - `GET /api/users/profile` (authenticated, own profile)
+  - `PUT /api/users/profile` (authenticated, update profile)
+  - `GET /api/users/{id}/blogs` (public, user's blogs)
+  - `GET /api/users/{id}/comments` (public, user's comments)
+- **ImageController**: Manages image uploads
+  - `POST /api/blogs/{blogId}/images` (author only)
+  - `DELETE /api/images/{id}` (author only)
+  - `GET /api/images/{filename}` (public, serve images)
 
 #### Services
 - **AuthService**: Authentication business logic
-- **BlogService**: Blog management business logic
-- **UserService**: User management operations
+- **BlogService**: Blog management business logic with sorting/filtering
+- **UserService**: User management and profile operations
+- **CommentService**: Comment management business logic
+- **TagService**: Tag management and popularity tracking
+- **ImageService**: Image upload, storage, and management
 
 #### Repositories
 - **UserRepository**: JPA repository for User entity
-- **BlogRepository**: JPA repository for Blog entity
+- **BlogRepository**: JPA repository for Blog entity with custom queries for sorting/filtering
+- **CommentRepository**: JPA repository for Comment entity
+- **TagRepository**: JPA repository for Tag entity
+- **BlogImageRepository**: JPA repository for BlogImage entity
 
 ## Data Models
 
@@ -135,6 +159,8 @@ erDiagram
         String password
         String firstName
         String lastName
+        String profilePicture
+        String bio
         LocalDateTime createdAt
         LocalDateTime updatedAt
     }
@@ -144,11 +170,50 @@ erDiagram
         String title
         String content
         Long authorId FK
+        Integer viewCount
         LocalDateTime createdAt
         LocalDateTime updatedAt
     }
     
+    Tag {
+        Long id PK
+        String name UK
+        String color
+        LocalDateTime createdAt
+    }
+    
+    BlogTag {
+        Long blogId FK
+        Long tagId FK
+    }
+    
+    Comment {
+        Long id PK
+        String content
+        Long blogId FK
+        Long authorId FK
+        Boolean isEdited
+        LocalDateTime createdAt
+        LocalDateTime updatedAt
+    }
+    
+    BlogImage {
+        Long id PK
+        String fileName
+        String originalName
+        String filePath
+        String contentType
+        Long fileSize
+        Long blogId FK
+        LocalDateTime createdAt
+    }
+    
     User ||--o{ Blog : creates
+    User ||--o{ Comment : writes
+    Blog ||--o{ Comment : has
+    Blog ||--o{ BlogImage : contains
+    Blog ||--o{ BlogTag : tagged_with
+    Tag ||--o{ BlogTag : applied_to
 ```
 
 ### Entity Classes
@@ -204,11 +269,115 @@ public class Blog {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
     
+    @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
+    private Integer viewCount = 0;
+    
     @CreationTimestamp
     private LocalDateTime createdAt;
     
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+    
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BlogImage> images = new ArrayList<>();
+    
+    @ManyToMany
+    @JoinTable(
+        name = "blog_tags",
+        joinColumns = @JoinColumn(name = "blog_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags = new HashSet<>();
+}
+```
+
+#### Tag Entity
+```java
+@Entity
+@Table(name = "tags")
+public class Tag {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(unique = true, nullable = false)
+    private String name;
+    
+    @Column
+    private String color;
+    
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    
+    @ManyToMany(mappedBy = "tags")
+    private Set<Blog> blogs = new HashSet<>();
+}
+```
+
+#### Comment Entity
+```java
+@Entity
+@Table(name = "comments")
+public class Comment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String content;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "blog_id", nullable = false)
+    private Blog blog;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
+    
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isEdited = false;
+    
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+}
+```
+
+#### BlogImage Entity
+```java
+@Entity
+@Table(name = "blog_images")
+public class BlogImage {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(nullable = false)
+    private String fileName;
+    
+    @Column(nullable = false)
+    private String originalName;
+    
+    @Column(nullable = false)
+    private String filePath;
+    
+    @Column(nullable = false)
+    private String contentType;
+    
+    @Column(nullable = false)
+    private Long fileSize;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "blog_id", nullable = false)
+    private Blog blog;
+    
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }
 ```
 
@@ -220,9 +389,25 @@ public class Blog {
 - **AuthResponse**: JWT token and user info
 
 #### Blog DTOs
-- **BlogRequest**: Title and content for create/update
-- **BlogResponse**: Complete blog data with author info
-- **BlogSummaryResponse**: Blog list item with pagination
+- **BlogRequest**: Title, content, and tags for create/update
+- **BlogResponse**: Complete blog data with author info, tags, comments count, view count
+- **BlogSummaryResponse**: Blog list item with pagination, tags, and basic stats
+
+#### Comment DTOs
+- **CommentRequest**: Content for create/update
+- **CommentResponse**: Complete comment data with author info and timestamps
+
+#### Tag DTOs
+- **TagRequest**: Name and color for create/update
+- **TagResponse**: Tag data with usage count
+
+#### User Profile DTOs
+- **UserProfileRequest**: Profile update data
+- **UserProfileResponse**: Complete profile data with activity summary
+
+#### Image DTOs
+- **ImageUploadResponse**: Image metadata after successful upload
+- **ImageResponse**: Image data with URLs
 
 ## Error Handling
 
