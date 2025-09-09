@@ -1,11 +1,5 @@
 package com.blogapp.blogapp.service;
 
-import com.blogapp.blogapp.dto.AuthResponse;
-import com.blogapp.blogapp.dto.LoginRequest;
-import com.blogapp.blogapp.dto.RegisterRequest;
-import com.blogapp.blogapp.entity.User;
-import com.blogapp.blogapp.repository.UserRepository;
-import com.blogapp.blogapp.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +7,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.blogapp.blogapp.dto.AuthResponse;
+import com.blogapp.blogapp.dto.LoginRequest;
+import com.blogapp.blogapp.dto.RegisterRequest;
+import com.blogapp.blogapp.entity.User;
+import com.blogapp.blogapp.repository.UserRepository;
+import com.blogapp.blogapp.util.JwtUtils;
 
 @Service
 public class AuthService {
@@ -74,4 +75,6 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
         return new AuthResponse(jwt, user.getId(), user.getEmail(), 
-                               use
+                               user.getFirstName(), user.getLastName());
+    }
+}
