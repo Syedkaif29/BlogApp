@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8082/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8082';
+const API_URL = `${API_BASE_URL}/api`;
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -214,7 +215,7 @@ export const imageAPI = {
     }
   },
   getImageUrl: (filename) => {
-    return `${API_BASE_URL}/images/${filename}`;
+    return `${API_URL}/images/${filename}`;
   }
 };
 
