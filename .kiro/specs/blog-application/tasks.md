@@ -36,14 +36,22 @@
     - Create DTOs for authentication requests and responses
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.6_
 
-- [ ] 3. Implement backend blog management system
-  - [ ] 3.1 Create blog repository and service layer
+- [x] 3. Implement backend blog management system
+
+
+
+
+  - [x] 3.1 Create blog repository and service layer
+
+
     - Implement BlogRepository with custom queries for pagination
     - Create BlogService with CRUD operations and authorization checks
     - Add methods for public blog listing and author-specific operations
     - _Requirements: 2.2, 2.4, 2.5, 2.6, 3.1, 3.6_
 
-  - [ ] 3.2 Build blog REST controllers
+  - [x] 3.2 Build blog REST controllers
+
+
     - Create BlogController with all CRUD endpoints
     - Implement pagination for public blog listing
     - Add authorization checks for edit/delete operations
