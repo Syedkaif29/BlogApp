@@ -19,11 +19,15 @@ RUN ./mvnw dependency:go-offline -B
 # Copy source code
 COPY src ./src
 
+# Copy startup script
+COPY start.sh .
+RUN chmod +x start.sh
+
 # Build the application
 RUN ./mvnw clean package -DskipTests
 
 # Expose the port that Render will use
 EXPOSE $PORT
 
-# Run the application
-CMD ["java", "-Dserver.port=$PORT", "-jar", "target/blogapp-0.0.1-SNAPSHOT.jar"]
+# Run the application using the startup script
+CMD ["./start.sh"]
