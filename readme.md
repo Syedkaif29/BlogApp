@@ -13,9 +13,7 @@ A full-stack blog application built with React and Spring Boot, featuring user a
 - **Pagination**: Efficient blog listing with pagination support
 - **Author Controls**: Blog authors can edit and delete their own posts
 
-### Create Blog Interface
 
-![Create Blog Page](img/createblog.png)
 
 ## 🛠 Technology Stack
 
