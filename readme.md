@@ -1,7 +1,8 @@
-
 # Blog Application - Full Stack Assessment
 
 A full-stack blog application built with React and Spring Boot, featuring user authentication, blog management, and responsive design.
+
+![Blog Application Screenshot](img/Screenshot%202025-09-10%20130610.png)
 
 ## 🚀 Features
 
@@ -12,15 +13,21 @@ A full-stack blog application built with React and Spring Boot, featuring user a
 - **Pagination**: Efficient blog listing with pagination support
 - **Author Controls**: Blog authors can edit and delete their own posts
 
+### Create Blog Interface
+
+![Create Blog Page](img/createblog.png)
+
 ## 🛠 Technology Stack
 
 ### Frontend
+
 - **React 18** - Modern UI framework
 - **React Router** - Client-side routing
 - **Tailwind CSS** - Utility-first CSS framework
 - **Axios** - HTTP client for API requests
 
 ### Backend
+
 - **Spring Boot 3.5.5** - Java web framework
 - **Spring Security** - Authentication and authorization
 - **Spring Data JPA** - Database abstraction layer
@@ -37,12 +44,14 @@ A full-stack blog application built with React and Spring Boot, featuring user a
 ## 🏃‍♂️ Quick Start
 
 ### 1. Clone the Repository
+
 ```bash
 git clone <repository-url>
 cd BlogApp
 ```
 
 ### 2. Database Setup
+
 ```sql
 -- Create database
 CREATE DATABASE blogapp;
@@ -53,6 +62,7 @@ GRANT ALL PRIVILEGES ON DATABASE blogapp TO blogapp_user;
 ```
 
 ### 3. Backend Setup
+
 ```bash
 cd blogapp
 
@@ -66,6 +76,7 @@ mvn spring-boot:run
 The backend will start on `http://localhost:8082`
 
 ### 4. Frontend Setup
+
 ```bash
 cd blogfront/blogfront
 
@@ -107,11 +118,13 @@ BlogApp/
 ## 🔗 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
 - `POST /api/auth/logout` - User logout
 
 ### Blogs
+
 - `GET /api/blogs` - Get all blogs (public, paginated)
 - `GET /api/blogs/{id}` - Get blog by ID (public)
 - `POST /api/blogs` - Create new blog (authenticated)
@@ -138,6 +151,7 @@ BlogApp/
 ## 📱 Responsive Design
 
 The application is fully responsive and optimized for:
+
 - Desktop (1024px+)
 - Tablet (768px - 1023px)
 - Mobile (320px - 767px)
@@ -145,6 +159,7 @@ The application is fully responsive and optimized for:
 ## 🚀 Deployment
 
 ### Backend Deployment
+
 ```bash
 # Build the JAR file
 mvn clean package
@@ -154,6 +169,7 @@ java -jar target/blogapp-0.0.1-SNAPSHOT.jar
 ```
 
 ### Frontend Deployment
+
 ```bash
 # Build for production
 npm run build
@@ -164,12 +180,14 @@ npm run build
 ## 🧪 Testing
 
 ### Backend Tests
+
 ```bash
 cd blogapp
 mvn test
 ```
 
 ### Frontend Tests
+
 ```bash
 cd blogfront/blogfront
 npm test
@@ -177,8 +195,17 @@ npm test
 
 ## 🌐 Live Demo
 
-**Frontend URL**: [To be deployed]
-**Backend API**: [To be deployed]
+**Frontend URL**: [https://blog-app-kappa-two-40.vercel.app/](https://blog-app-kappa-two-40.vercel.app/)
+
+## 📸 Screenshots
+
+### Home Page
+
+![Home Page](img/Screenshot%202025-09-10%20130610.png)
+
+### Create Blog Page
+
+![Create Blog](img/createblog.png)
 
 ## 👥 Usage
 
@@ -198,9 +225,8 @@ npm test
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-<!-- **Assignment Submission**: Full Stack Intern Assessment - Blog Application  -->
 
